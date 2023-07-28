@@ -1,16 +1,20 @@
-const Express = require('express');
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
-const app = Express();
-const port = 8080;
+io.on('connection', (socket) => {
+    console.log('a user connected');
 
-app.get('/api/v1/test', (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With")
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({
-        data: "ok"
-    }));
+    socket.on('message', (data) => {
+        console.log(data);
+        //if(data){
+            socket.emit('data','envio de datos');
+        //}
+    })
 });
 
-
-app.listen(port, () => console.log(`listening in port ${port}`));
+const port = 8080;
+server.listen(port, () => console.log(`listening in port ${port}`));
