@@ -10,17 +10,28 @@ const io = new Server(server);
 
 io.on('connection', async (socket) => {
     console.log('a user connected');
+    emiter(socket);
+});
 
-    socket.on('response', async (data) => {
-        if (data) {
+let timer;
+function emiter(socket) {
+    clearTimeout(timer);
+
+    //I used an iterval because I couldn't find a webhook inside the documentation
+    setTimeout(async () => {
+        const assetsArray = await services.getAssets();
+        if (assetsArray.length) {
+            socket.emit('data', assetsArray);
+        }
+        timer = setInterval(async function () {
+            console.log('timer')
             const assetsArray = await services.getAssets();
-            if(assetsArray.length){
+            if (assetsArray.length) {
                 socket.emit('data', assetsArray);
             }
-            
-        }
-    })
-});
+        }, 10000)
+    }, 300);
+}
 
 const port = 8080;
 server.listen(port, () => console.log(`listening in port ${port}`));
