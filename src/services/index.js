@@ -4,7 +4,7 @@ async function getAssets() {
     const coins = ['bitcoin', 'ethereum', 'cardano'];
     const arrayAssets = [];
     for (const coin of coins) {
-        const infoAsset = await axios.get(`https://data.messari.io/api/v1/assets/${coin}/metrics/market-data`);
+        const infoAsset = await axios.get(`https://data.messari.io/api/v1/assets/${coin}/metrics`);
         if (infoAsset?.data?.data) {
             arrayAssets.push(infoAsset?.data?.data);
         }
